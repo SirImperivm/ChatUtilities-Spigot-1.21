@@ -1,0 +1,4 @@
+name: ChatUtilities
+version: '1.0'
+main: me.sirimperivm.chatUtilities.ChatUtilities
+api-version: '1.21'
