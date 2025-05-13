@@ -2,3 +2,5 @@ name: ChatUtilities
 version: '1.0'
 main: me.sirimperivm.chatUtilities.ChatUtilities
 api-version: '1.21'
+description: Add utilities for player chat messages.
+author: SirImperivm_

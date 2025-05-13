@@ -1,5 +1,8 @@
 package me.sirimperivm.chatUtilities;
 
+import me.sirimperivm.chatUtilities.assets.handlers.ConfigHandler;
+import me.sirimperivm.chatUtilities.assets.others.Logger;
+import me.sirimperivm.chatUtilities.assets.strings.Prefixer;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @SuppressWarnings("all")
@@ -7,6 +10,9 @@ public final class ChatUtilities extends JavaPlugin {
 
     private ChatUtilities plugin;
     private static ChatUtilities instance;
+
+    private ConfigHandler configHandler;
+    private Prefixer prefixer;
 
     @Override
     public void onLoad() {
@@ -16,13 +22,15 @@ public final class ChatUtilities extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        configHandler = new ConfigHandler(plugin);
+        prefixer = new Prefixer(plugin);
 
+        Logger.success("Plugin enabled!");
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        Logger.success("Plugin disabled!");
     }
 
     public ChatUtilities getPlugin() {
@@ -31,5 +39,13 @@ public final class ChatUtilities extends JavaPlugin {
 
     public static ChatUtilities getInstance() {
         return instance;
+    }
+
+    public ConfigHandler getConfigHandler() {
+        return configHandler;
+    }
+
+    public Prefixer getPrefixer() {
+        return prefixer;
     }
 }
