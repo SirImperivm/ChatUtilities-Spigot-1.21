@@ -1,0 +1,7 @@
+debug-mode: false
+
+prefixes:
+  default-prefix:
+    prefix-string: ""
+    color-code: "&7"
+    placeholders-color: "&3"
