@@ -1,0 +1,2 @@
+no-perm: "default-prefix/You need %node% permission to do this action."
+no-console: "default-prefix/This command is for in-game players only."
