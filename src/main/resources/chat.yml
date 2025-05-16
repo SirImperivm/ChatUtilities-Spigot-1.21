@@ -2,40 +2,40 @@ default-group: # Chat group name
   by-default: true # Set this as the default group, if false you'll need to set chatutilities.group.<group-name> permission.
   chat-sections:
     prefix:
-      text: "%vault-group%"
+      text: "&5%vault_group%"
       hover-action:
         type: SHOW_TEXT
         text-value: "&6%vault-group%"
       click-action:
         type: SUGGEST_COMMAND
-        command-value: "/msg {player_name}"
+        command-value: "/msg {player_name} "
     player-tag:
-      text: "{player_name}"
+      text: "&6{player_name}"
       hover-action:
         type: SHOW_ENTITY
         entity-value:
           id: "{player_uuid}"
-          type: "minecraft:{player_entity}"
-          name: "{player_entity_name}"
+          type: "minecraft:player"
+          name: "{player_display_name}"
       click-action:
         type: SUGGEST_COMMAND
-        command-value: "/msg {player_name}"
+        command-value: "/msg {player_name} "
     suffix:
-      text: "%vault-group%"
+      text: "&7%vault_group%"
       hover-action:
         type: SHOW_ITEM
         item-value:
           material: DIAMOND
           amount: 64
           display-name: "&6Diamanti"
-          description: []
+          description: [ ]
           custom-model-data: 1000
           glowing: false
       click-action:
         type: SUGGEST_COMMAND
-        command-value: "/msg {player_name}"
+        command-value: "/msg {player_name} "
   generic-settings:
-    chat-color: "&#f370cc-&#f0a4f9"
+    chat-color: "&#f370cc"
     user-tag-format: "&#7d5cf7@{tagged-name}"
     item-showing-format: "&r[{default-item-display-name}&r]"
-  chat-format: "{prefix} {player-tag} {suffix} &8» {message}"
+  chat-format: "{prefix} {player-tag} {suffix} &8» "

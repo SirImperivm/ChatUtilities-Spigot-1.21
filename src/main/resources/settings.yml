@@ -6,6 +6,10 @@ prefixes:
     color-code: "&7"
     placeholders-color: "&3"
 
+tasks:
+  refresh-player:
+    timer: 3 # Time in seconds which the plugin will refresh the player's chatgroup.
+
 chat-sounds:
   enabled: true
   sender-only: false

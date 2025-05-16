@@ -2,6 +2,9 @@ package me.sirimperivm.chatUtilities;
 
 import me.sirimperivm.chatUtilities.assets.handlers.ConfigHandler;
 import me.sirimperivm.chatUtilities.assets.managers.ChatManager;
+import me.sirimperivm.chatUtilities.assets.objects.entities.ChatGroup;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,5 +29,11 @@ public class Events implements Listener {
         String baseMessage = e.getMessage();
 
         e.setCancelled(true);
+
+        ChatGroup playerChatGroup = chatManager.getPlayerChatGroups().get(p);
+        if (playerChatGroup == null) return;
+
+        TextComponent message = playerChatGroup.getMessage(p, baseMessage);
+        Bukkit.getServer().spigot().broadcast(message);
     }
 }
