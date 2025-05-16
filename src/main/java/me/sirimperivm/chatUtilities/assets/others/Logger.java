@@ -8,19 +8,19 @@ import org.bukkit.Bukkit;
 public class Logger {
 
     public static void success(String s) {
-        Bukkit.getConsoleSender().sendMessage(Formatter.translate("&a[ChatUtilities] &7" + s));
+        Bukkit.getConsoleSender().sendMessage(Formatter.translate("&a[ChatUtilities] " + s));
     }
 
     public static void info(String s) {
-        Bukkit.getConsoleSender().sendMessage(Formatter.translate("&e[ChatUtilities] &7" + s));
+        Bukkit.getConsoleSender().sendMessage(Formatter.translate("&e[ChatUtilities] " + s));
     }
 
     public static void fail(String s) {
-        Bukkit.getConsoleSender().sendMessage(Formatter.translate("&c[ChatUtilities] &7" + s));
+        Bukkit.getConsoleSender().sendMessage(Formatter.translate("&c[ChatUtilities] " + s));
     }
 
     public static void debug(String s) {
         boolean enabled = ChatUtilities.getInstance().getConfigHandler().getSettings().getBoolean("debug-mode", false);
-        if (enabled) Bukkit.getConsoleSender().sendMessage(Formatter.translate("&b[ChatUtilities - Debug] &7" + s));
+        if (enabled) Bukkit.getConsoleSender().sendMessage(Formatter.translate("&b[ChatUtilities - Debug] " + s));
     }
 }

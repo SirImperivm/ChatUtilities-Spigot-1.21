@@ -5,11 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>me.sirimperivm</groupId>
-  <artifactId>chatutilities</artifactId>
+  <artifactId>ChatUtilities</artifactId>
   <version>1.0</version>
   <packaging>jar</packaging>
 
-  <name>chatutilities</name>
+  <name>ChatUtilities</name>
 
   <properties>
     <java.version>21</java.version>

@@ -6,6 +6,8 @@ import me.sirimperivm.chatUtilities.assets.others.Logger;
 import me.sirimperivm.chatUtilities.assets.strings.Prefixer;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import static org.bukkit.Bukkit.getPluginManager;
+
 @SuppressWarnings("all")
 public final class ChatUtilities extends JavaPlugin {
 
@@ -29,6 +31,8 @@ public final class ChatUtilities extends JavaPlugin {
         prefixer = new Prefixer(plugin);
 
         chatManager = new ChatManager(plugin);
+
+        getPluginManager().registerEvents(new Events(plugin), plugin);
 
         Logger.success("Plugin enabled!");
     }

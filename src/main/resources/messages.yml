@@ -1,2 +1,26 @@
 no-perm: "default-prefix/You need %node% permission to do this action."
 no-console: "default-prefix/This command is for in-game players only."
+
+chat-item:
+  empty-hand: "default-prefix/Your hand is empty."
+  hover-text:
+    message: |-
+      &9Name: &f{default-item-display-name}
+      &9Amount: &fx{default-item-amount}
+      
+      &9Description:
+      {default-item-lore}
+      
+      &9Enchantments:
+      {default-item-enchantments}
+      
+      &9Flags:
+      {default-item-flags}
+    formats:
+      lore-formats: " {default-item-lore-line}"
+      enchantments-formats:
+        last: "&f{default-item-enchantment-name} &9- &f{default-item-enchantment-level}&9."
+        not-last: "&f{default-item-enchantment-name} &9- &f{default-item-enchantment-level}&9,\n"
+      flags-formats:
+        last: "&f{default-item-flag}&9."
+        not-last: "&f{default-item-flag}&9,\n"

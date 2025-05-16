@@ -5,3 +5,22 @@ prefixes:
     prefix-string: ""
     color-code: "&7"
     placeholders-color: "&3"
+
+chat-sounds:
+  enabled: true
+  sender-only: false
+  sound: UI_BUTTON_CLICK
+  volume: 1.0
+  pitch: 1.0
+
+chat-item:
+  enabled: true
+  trigger-patterns:
+    - "[i]"
+    - "[item]"
+
+user-mention:
+  enabled: true
+  sound: ENTITY_EXPERIENCE_ORB_PICKUP
+  volume: 1.0
+  pitch: 1.0
