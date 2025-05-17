@@ -65,12 +65,15 @@ public class ChatGroup {
 
         if (sectionCount <= 1) {
             mainComponent = new TextComponent(Formatter.translate(PlaceholderAPI.setPlaceholders(player, chatFormat)));
+            String formattedMessage = Formatter.translate(baseMessage);
+            mainComponent.addExtra(new TextComponent(formattedMessage));
             return mainComponent;
         }
 
         matcher.reset();
 
         int lastEnd = 0;
+        boolean hasMessagePlaceholder = false;
 
         while (matcher.find()) {
             if (matcher.start() > lastEnd) {
@@ -81,13 +84,24 @@ public class ChatGroup {
 
             String sectionName = matcher.group(1);
 
-            ChatGroupSection section = sections.get(sectionName);
-            if (section == null)
-                continue;
-
-            section.configure(player);
-            TextComponent sectionComponent = section.getComponent();
-            mainComponent.addExtra(sectionComponent);
+            if (sectionName.equals("message")) {
+                hasMessagePlaceholder = true;
+                String formattedMessage;
+                if (baseMessage.matches("^&[0-9a-fk-or].*") || baseMessage.matches("^#[0-9a-fA-F]{6}.*") ||
+                        baseMessage.matches("^\\{#[0-9a-fA-F]{6}\\}.*")) {
+                    formattedMessage = Formatter.translate(baseMessage);
+                } else {
+                    formattedMessage = Formatter.translate(chatColor + baseMessage);
+                }
+                mainComponent.addExtra(new TextComponent(formattedMessage));
+            } else {
+                ChatGroupSection section = sections.get(sectionName);
+                if (section != null) {
+                    section.configure(player);
+                    TextComponent sectionComponent = section.getComponent();
+                    mainComponent.addExtra(sectionComponent);
+                }
+            }
 
             lastEnd = matcher.end();
         }
@@ -98,8 +112,16 @@ public class ChatGroup {
             mainComponent.addExtra(remainingComponent);
         }
 
-        String coloredMessage = Formatter.translate(PlaceholderAPI.setPlaceholders(player, chatColor + baseMessage));
-        mainComponent.addExtra(new TextComponent(coloredMessage));
+        if (!hasMessagePlaceholder) {
+            String formattedMessage;
+            if (baseMessage.matches("^&[0-9a-fk-or].*") || baseMessage.matches("^#[0-9a-fA-F]{6}.*") ||
+                    baseMessage.matches("^\\{#[0-9a-fA-F]{6}\\}.*")) {
+                formattedMessage = Formatter.translate(baseMessage);
+            } else {
+                formattedMessage = Formatter.translate(chatColor + baseMessage);
+            }
+            mainComponent.addExtra(new TextComponent(formattedMessage));
+        }
 
         return mainComponent;
     }

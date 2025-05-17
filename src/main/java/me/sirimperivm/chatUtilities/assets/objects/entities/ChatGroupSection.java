@@ -44,69 +44,79 @@ public class ChatGroupSection {
                 .replace("{player_uuid}", player.getUniqueId().toString())
         ));
 
-        String hoverActionType = section.getString("hover-action.type").toUpperCase();
-        String clickActionType = section.getString("click-action.type").toUpperCase();
-
-        switch (hoverActionType) {
-            case "SHOW_ITEM" -> {
-                hoverEvent = wrapItem(section.getConfigurationSection("hover-action.item-value"));
-            }
-            case "SHOW_ENTITY" -> {
-                hoverEvent = wrapEntity(player, section.getString("hover-action.entity-value.id"), section.getString("hover-action.entity-value.type"), section.getString("hover-action.entity-value.name")
-                        .replace("{player_name}", player.getName())
-                        .replace("{player_display_name}", player.getDisplayName())
-                );
-            }
-            case "SHOW_TEXT" -> {
-                String hoverText = Formatter.translate(PlaceholderAPI.setPlaceholders(player, section.getString("hover-action.text-value")));
-                hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hoverText).create());
-            }
-            default -> {
-                throw new IllegalArgumentException("Invalid hover action type!");
-            }
-        }
-
-        switch (clickActionType) {
-            case "RUN_COMMAND" -> {
-                String command = Formatter.translate(PlaceholderAPI.setPlaceholders(player, section.getString("click-action.command-value")
-                        .replace("{player_name}", player.getName())
-                        .replace("{player_display_name}", player.getDisplayName())
-                        .replace("{player_uuid}", player.getUniqueId().toString())
-                ));
-                clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, command);
-            }
-            case "SUGGEST_COMMAND" -> {
-                String command = Formatter.translate(PlaceholderAPI.setPlaceholders(player, section.getString("click-action.command-value")
-                        .replace("{player_name}", player.getName())
-                        .replace("{player_display_name}", player.getDisplayName())
-                        .replace("{player_uuid}", player.getUniqueId().toString())
-                ));
-                clickEvent = new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command);
-            }
-            case "OPEN_URL" -> {
-                String url = Formatter.translate(PlaceholderAPI.setPlaceholders(player, section.getString("click-action.url-value")
-                        .replace("{player_name}", player.getName())
-                        .replace("{player_display_name}", player.getDisplayName())
-                        .replace("{player_uuid}", player.getUniqueId().toString())
-                ));
-                clickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, url);
-            }
-            case "COPY_TO_CLIPBOARD" -> {
-                String text = Formatter.translate(PlaceholderAPI.setPlaceholders(player, section.getString("click-action.text-value")
-                        .replace("{player_name}", player.getName())
-                        .replace("{player_display_name}", player.getDisplayName())
-                        .replace("{player_uuid}", player.getUniqueId().toString())
-                ));
-                clickEvent = new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, text);
-            }
-            default -> {
-                throw new IllegalArgumentException("Invalid click action type!");
-            }
-        }
-
         component = new TextComponent(text);
-        component.setHoverEvent(hoverEvent);
-        component.setClickEvent(clickEvent);
+
+        ConfigurationSection hoverAction = section.getConfigurationSection("hover-action");
+        ConfigurationSection clickAction = section.getConfigurationSection("click-action");
+
+        if (hoverAction != null && !hoverAction.getKeys(false).isEmpty()) {
+            String hoverActionType = section.getString("hover-action.type").toUpperCase();
+
+            switch (hoverActionType) {
+                case "SHOW_ITEM" -> {
+                    hoverEvent = wrapItem(section.getConfigurationSection("hover-action.item-value"));
+                }
+                case "SHOW_ENTITY" -> {
+                    hoverEvent = wrapEntity(player, section.getString("hover-action.entity-value.id"), section.getString("hover-action.entity-value.type"), section.getString("hover-action.entity-value.name")
+                            .replace("{player_name}", player.getName())
+                            .replace("{player_display_name}", player.getDisplayName())
+                    );
+                }
+                case "SHOW_TEXT" -> {
+                    String hoverText = Formatter.translate(PlaceholderAPI.setPlaceholders(player, section.getString("hover-action.text-value")));
+                    hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hoverText).create());
+                }
+                default -> {
+                    throw new IllegalArgumentException("Invalid hover action type!");
+                }
+            }
+
+            component.setHoverEvent(hoverEvent);
+        }
+
+        if (clickAction != null && !clickAction.getKeys(false).isEmpty()) {
+            String clickActionType = section.getString("click-action.type").toUpperCase();
+
+            switch (clickActionType) {
+                case "RUN_COMMAND" -> {
+                    String command = Formatter.translate(PlaceholderAPI.setPlaceholders(player, section.getString("click-action.command-value")
+                            .replace("{player_name}", player.getName())
+                            .replace("{player_display_name}", player.getDisplayName())
+                            .replace("{player_uuid}", player.getUniqueId().toString())
+                    ));
+                    clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, command);
+                }
+                case "SUGGEST_COMMAND" -> {
+                    String command = Formatter.translate(PlaceholderAPI.setPlaceholders(player, section.getString("click-action.command-value")
+                            .replace("{player_name}", player.getName())
+                            .replace("{player_display_name}", player.getDisplayName())
+                            .replace("{player_uuid}", player.getUniqueId().toString())
+                    ));
+                    clickEvent = new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command);
+                }
+                case "OPEN_URL" -> {
+                    String url = Formatter.translate(PlaceholderAPI.setPlaceholders(player, section.getString("click-action.url-value")
+                            .replace("{player_name}", player.getName())
+                            .replace("{player_display_name}", player.getDisplayName())
+                            .replace("{player_uuid}", player.getUniqueId().toString())
+                    ));
+                    clickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, url);
+                }
+                case "COPY_TO_CLIPBOARD" -> {
+                    String text = Formatter.translate(PlaceholderAPI.setPlaceholders(player, section.getString("click-action.text-value")
+                            .replace("{player_name}", player.getName())
+                            .replace("{player_display_name}", player.getDisplayName())
+                            .replace("{player_uuid}", player.getUniqueId().toString())
+                    ));
+                    clickEvent = new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, text);
+                }
+                default -> {
+                    throw new IllegalArgumentException("Invalid click action type!");
+                }
+            }
+
+            component.setClickEvent(clickEvent);
+        }
     }
 
     private HoverEvent wrapEntity(Player player, String id, String type, String displayedName) {
