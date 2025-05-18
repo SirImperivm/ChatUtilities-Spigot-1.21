@@ -30,7 +30,6 @@ default-group: # Chat group name
           display-name: "&6Diamanti"
           description: [ ]
           custom-model-data: 1000
-          glowing: false
       click-action:
         type: SUGGEST_COMMAND
         command-value: "/msg {player_name} "

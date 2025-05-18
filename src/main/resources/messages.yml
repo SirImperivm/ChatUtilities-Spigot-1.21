@@ -1,8 +1,14 @@
 no-perm: "default-prefix/You need %node% permission to do this action."
 no-console: "default-prefix/This command is for in-game players only."
 
-chat-item:
+chat-exceptions:
+  chat-item-use: "defalt-prefix/You can't show items in chat."
   empty-hand: "default-prefix/Your hand is empty."
+  colored: "default-prefix/You can't use colored characters in chat."
+  special: "default-prefix/You can't use special characters in chat."
+  hex: "default-prefix/You can't use hex colors in chat."
+
+chat-item:
   hover-text:
     message: |-
       &9Name: &f{default-item-display-name}

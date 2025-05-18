@@ -46,13 +46,13 @@ public class ChatManager {
 
             boolean byDefault = groupConfig.getBoolean("by-default", false);
             if (byDefault && defaultGroup == null) {
-                ChatGroup group = new ChatGroup(weight, groupName, true);
+                ChatGroup group = new ChatGroup(this, weight, groupName, true);
 
                 group.configure();
                 defaultGroup = group;
                 chatGroups.put(groupName, group);
             } else {
-                ChatGroup group = new ChatGroup(weight, groupName, false);
+                ChatGroup group = new ChatGroup(this, weight, groupName, false);
 
                 group.configure();
                 chatGroups.put(groupName, group);
@@ -123,5 +123,9 @@ public class ChatManager {
 
     public HashMap<Player, ChatGroup> getPlayerChatGroups() {
         return playerChatGroups;
+    }
+
+    public ConfigHandler getConfigHandler() {
+        return configHandler;
     }
 }
