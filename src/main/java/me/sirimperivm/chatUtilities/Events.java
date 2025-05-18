@@ -6,6 +6,7 @@ import me.sirimperivm.chatUtilities.assets.objects.entities.ChatGroup;
 import me.sirimperivm.chatUtilities.assets.objects.enums.Config;
 import me.sirimperivm.chatUtilities.assets.objects.exceptions.ChatMessageException;
 import me.sirimperivm.chatUtilities.assets.others.Logger;
+import me.sirimperivm.chatUtilities.assets.strings.Formatter;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -41,6 +42,7 @@ public class Events implements Listener {
         try {
             TextComponent message = playerChatGroup.getMessage(p, baseMessage);
             Bukkit.getServer().spigot().broadcast(message);
+            Bukkit.getConsoleSender().sendMessage(Formatter.translate("&b" + p.getName() + "&r: " + baseMessage));
             playerChatGroup.sendChatSound();
         } catch (ChatMessageException ex) {
             p.sendMessage(ConfigHandler.getFormatString(Config.messages.getC(), ex.getMessage(), Map.of()));

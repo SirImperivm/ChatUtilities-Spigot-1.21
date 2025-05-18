@@ -1,32 +1,17 @@
 no-perm: "default-prefix/You need %node% permission to do this action."
 no-console: "default-prefix/This command is for in-game players only."
+plugin-reloaded:
+  successfully: "default-prefix/Plugin successfully reloaded."
+  failed: "default-prefix/Failed to reload the plugin."
+
+chatutilities-command:
+  usage:
+    - "&8/&c%command-label% help &7- &fShows these information."
+    - "&8/&c%command-label% reload &7- &fTries to reload the plugin."
 
 chat-exceptions:
-  chat-item-use: "defalt-prefix/You can't show items in chat."
+  chat-item-use: "default-prefix/You can't show items in chat."
   empty-hand: "default-prefix/Your hand is empty."
   colored: "default-prefix/You can't use colored characters in chat."
   special: "default-prefix/You can't use special characters in chat."
   hex: "default-prefix/You can't use hex colors in chat."
-
-chat-item:
-  hover-text:
-    message: |-
-      &9Name: &f{default-item-display-name}
-      &9Amount: &fx{default-item-amount}
-      
-      &9Description:
-      {default-item-lore}
-      
-      &9Enchantments:
-      {default-item-enchantments}
-      
-      &9Flags:
-      {default-item-flags}
-    formats:
-      lore-formats: " {default-item-lore-line}"
-      enchantments-formats:
-        last: "&f{default-item-enchantment-name} &9- &f{default-item-enchantment-level}&9."
-        not-last: "&f{default-item-enchantment-name} &9- &f{default-item-enchantment-level}&9,\n"
-      flags-formats:
-        last: "&f{default-item-flag}&9."
-        not-last: "&f{default-item-flag}&9,\n"

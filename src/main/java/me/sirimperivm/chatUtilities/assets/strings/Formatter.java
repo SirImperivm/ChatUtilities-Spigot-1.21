@@ -10,10 +10,12 @@ import java.util.Map;
 public class Formatter {
 
     public static String translate(String s) {
+        if (s == null) return "";
         return RgbColorApi.colorize(s);
     }
 
     public static String translate(String s, Map<String, String> placeholders) {
+        if (s == null) return "";
         if (placeholders == null || placeholders.isEmpty()) return translate(s);
         for (Map.Entry<String, String> entry : placeholders.entrySet()) {
             s = s.replace(entry.getKey(), entry.getValue());
@@ -40,6 +42,8 @@ public class Formatter {
     }
 
     public static String format(Prefixer p, String s, Map<String, String> placeholders) {
+        if (s == null) return "";
+        
         if (s.matches("^[a-z-]+/.*")) {
             String[] prefixSplitter = s.split("/");
 

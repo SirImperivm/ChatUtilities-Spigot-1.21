@@ -20,6 +20,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +29,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Map;
+import java.util.Set;
 
 @SuppressWarnings("all")
 public class ChatGroup {
@@ -212,6 +216,10 @@ public class ChatGroup {
         String displayName = meta.hasDisplayName() ? Formatter.translate(meta.getDisplayName()) : "";
         List<String> description = meta.hasLore() ? Formatter.translate(meta.getLore()) : new ArrayList<>();
         int customModelData = meta.hasCustomModelData() ? meta.getCustomModelData() : 0;
+        
+        Map<Enchantment, Integer> enchantments = item.getEnchantments();
+        
+        Set<ItemFlag> itemFlags = meta.getItemFlags();
 
         StringBuilder nbtBuilder = new StringBuilder();
         nbtBuilder.append("{");
@@ -244,6 +252,28 @@ public class ChatGroup {
         if (customModelData > 0) {
             nbtBuilder.append("CustomModelData:").append(customModelData).append(",");
         }
+        
+        if (!enchantments.isEmpty()) {
+            nbtBuilder.append("Enchantments:[");
+            for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+                nbtBuilder.append("{id:\"")
+                         .append(entry.getKey().getKey().toString())
+                         .append("\",lvl:")
+                         .append(entry.getValue())
+                         .append("},");
+            }
+            nbtBuilder.deleteCharAt(nbtBuilder.length() - 1);
+            nbtBuilder.append("],");
+        }
+        
+        if (!itemFlags.isEmpty()) {
+            nbtBuilder.append("HideFlags:");
+            int flagValue = 0;
+            for (ItemFlag flag : itemFlags) {
+                flagValue |= getItemFlagValue(flag);
+            }
+            nbtBuilder.append(flagValue).append(",");
+        }
 
         if (nbtBuilder.charAt(nbtBuilder.length() - 1) == ',') {
             nbtBuilder.deleteCharAt(nbtBuilder.length() - 1);
@@ -269,6 +299,18 @@ public class ChatGroup {
         }
 
         return result;
+    }
+    
+    private int getItemFlagValue(ItemFlag flag) {
+        switch (flag) {
+            case HIDE_ENCHANTS: return 1;
+            case HIDE_ATTRIBUTES: return 2;
+            case HIDE_UNBREAKABLE: return 4;
+            case HIDE_DESTROYS: return 8;
+            case HIDE_PLACED_ON: return 16;
+            case HIDE_DYE: return 64;
+            default: return 0;
+        }
     }
     
     public void sendChatSound() {

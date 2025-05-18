@@ -35,3 +35,6 @@ permissions:
     hex: chatutilities.chat.hex # This allows players to use hex colors in chat.
   chat-item:
     use: chatutilities.chat-item.use
+  chat-utilities-command:
+    main: chatutilities.command.main
+    reload: chatutilities.command.reload

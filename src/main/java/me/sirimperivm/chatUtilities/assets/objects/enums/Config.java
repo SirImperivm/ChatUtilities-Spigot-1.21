@@ -9,8 +9,8 @@ import java.io.File;
 public enum Config {
 
     settings(ChatUtilities.getInstance().getConfigHandler().getSettings(), ChatUtilities.getInstance().getConfigHandler().getSettingsFile()),
-    messages(ChatUtilities.getInstance().getConfigHandler().getSettings(), ChatUtilities.getInstance().getConfigHandler().getSettingsFile()),
-    chat(ChatUtilities.getInstance().getConfigHandler().getSettings(), ChatUtilities.getInstance().getConfigHandler().getSettingsFile());
+    messages(ChatUtilities.getInstance().getConfigHandler().getMessages(), ChatUtilities.getInstance().getConfigHandler().getMessagesFile()),
+    chat(ChatUtilities.getInstance().getConfigHandler().getChat(), ChatUtilities.getInstance().getConfigHandler().getChatFile());
 
     private FileConfiguration c;
     private File f;

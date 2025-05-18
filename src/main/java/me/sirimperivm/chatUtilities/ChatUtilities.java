@@ -4,6 +4,7 @@ import me.sirimperivm.chatUtilities.assets.handlers.ConfigHandler;
 import me.sirimperivm.chatUtilities.assets.managers.ChatManager;
 import me.sirimperivm.chatUtilities.assets.others.Logger;
 import me.sirimperivm.chatUtilities.assets.strings.Prefixer;
+import me.sirimperivm.chatUtilities.commands.MainCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static org.bukkit.Bukkit.getPluginManager;
@@ -33,6 +34,8 @@ public final class ChatUtilities extends JavaPlugin {
         chatManager = new ChatManager(plugin);
 
         getPluginManager().registerEvents(new Events(plugin), plugin);
+        getCommand("chat-utilities").setExecutor(new MainCommand(plugin));
+        getCommand("chat-utilities").setTabCompleter(new MainCommand(plugin));
 
         Logger.success("Plugin enabled!");
     }
