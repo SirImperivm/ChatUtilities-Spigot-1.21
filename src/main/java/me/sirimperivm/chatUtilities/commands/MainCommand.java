@@ -7,6 +7,7 @@ import me.sirimperivm.chatUtilities.assets.objects.enums.Config;
 import me.sirimperivm.chatUtilities.assets.objects.enums.Permission;
 import me.sirimperivm.chatUtilities.assets.others.Errors;
 import me.sirimperivm.chatUtilities.assets.strings.Formatter;
+import me.sirimperivm.chatUtilities.assets.strings.Prefixer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,11 +22,13 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
     private ChatUtilities plugin;
     private ConfigHandler configHandler;
+    private Prefixer prefixer;
     private ChatManager chatManager;
 
     public MainCommand(ChatUtilities plugin) {
         this.plugin = plugin;
         configHandler = plugin.getConfigHandler();
+        prefixer = plugin.getPrefixer();
         chatManager = plugin.getChatManager();
     }
 
@@ -55,8 +58,8 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
             try {
                 configHandler.loadAll();
+                prefixer.load();
                 chatManager.configure();
-                chatManager.startRefreshingPlayers();
                 sender.sendMessage(ConfigHandler.getFormatString(Config.messages.getC(), "plugin-reloaded.successfully", Map.of()));
             } catch (Exception e) {
                 sender.sendMessage(ConfigHandler.getFormatString(Config.messages.getC(), "plugin-reloaded.failed", Map.of()));

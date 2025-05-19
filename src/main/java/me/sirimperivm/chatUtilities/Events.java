@@ -31,24 +31,25 @@ public class Events implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        Player p = e.getPlayer();
+        if (e.isCancelled()) return;
+        Player player = e.getPlayer();
         String baseMessage = e.getMessage();
 
         e.setCancelled(true);
 
-        ChatGroup playerChatGroup = chatManager.getPlayerChatGroups().get(p);
+        ChatGroup playerChatGroup = chatManager.getPlayerChatGroup(player);
         if (playerChatGroup == null) return;
 
         try {
-            TextComponent message = playerChatGroup.getMessage(p, baseMessage);
+            TextComponent message = playerChatGroup.getMessage(player, baseMessage);
             Bukkit.getServer().spigot().broadcast(message);
-            Bukkit.getConsoleSender().sendMessage(Formatter.translate("&b" + p.getName() + "&r: " + baseMessage));
+            Bukkit.getServer().getConsoleSender().sendMessage(Formatter.translate(message.toLegacyText()));
             playerChatGroup.sendChatSound();
         } catch (ChatMessageException ex) {
-            p.sendMessage(ConfigHandler.getFormatString(Config.messages.getC(), ex.getMessage(), Map.of()));
+            player.sendMessage(ConfigHandler.getFormatString(Config.messages.getC(), ex.getMessage(), Map.of()));
         } catch (Exception ex) {
             Logger.fail("An exception occurred while processing a chat message! Enable debug mode for more information.");
-            Logger.debug("Sender: " + p.getName());
+            Logger.debug("Sender: " + player.getName());
             Logger.debug("Message: " + baseMessage);
             Logger.debug("Chat Group: " + playerChatGroup.getName());
             Logger.debug("Stacktrace:");

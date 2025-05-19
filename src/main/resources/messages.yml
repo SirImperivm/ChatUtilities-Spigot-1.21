@@ -14,4 +14,3 @@ chat-exceptions:
   empty-hand: "default-prefix/Your hand is empty."
   colored: "default-prefix/You can't use colored characters in chat."
   special: "default-prefix/You can't use special characters in chat."
-  hex: "default-prefix/You can't use hex colors in chat."

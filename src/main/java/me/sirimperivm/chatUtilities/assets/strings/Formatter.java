@@ -1,6 +1,6 @@
 package me.sirimperivm.chatUtilities.assets.strings;
 
-import me.sirimperivm.rgbColorsApi.RgbColorApi;
+import net.md_5.bungee.api.ChatColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +10,7 @@ import java.util.Map;
 public class Formatter {
 
     public static String translate(String s) {
-        if (s == null) return "";
-        return RgbColorApi.colorize(s);
+        return ChatColor.translateAlternateColorCodes('&', s);
     }
 
     public static String translate(String s, Map<String, String> placeholders) {

@@ -5,14 +5,9 @@ import me.sirimperivm.chatUtilities.assets.handlers.ConfigHandler;
 import me.sirimperivm.chatUtilities.assets.objects.entities.ChatGroup;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachmentInfo;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("all")
 public class ChatManager {
@@ -22,16 +17,12 @@ public class ChatManager {
 
     private ChatGroup defaultGroup;
     private HashMap<String, ChatGroup> chatGroups;
-    private HashMap<Player, ChatGroup> playerChatGroups;
-
-    private BukkitTask refreshPlayerTask;
-
+    
     public ChatManager(ChatUtilities plugin) {
         this.plugin = plugin;
         configHandler = plugin.getConfigHandler();
 
         configure();
-        startRefreshingPlayers();
     }
 
     public void configure() {
@@ -62,55 +53,15 @@ public class ChatManager {
         }
     }
 
-    public void startRefreshingPlayers() {
-        if (refreshPlayerTask != null && !refreshPlayerTask.isCancelled()) {
-            refreshPlayerTask.cancel();
-            refreshPlayerTask = null;
-        }
-
-        long timer = configHandler.getSettings().getLong("tasks.refresh-player.timer", 20 * 20);
-
-        refreshPlayerTask = new BukkitRunnable() {
-            @Override
-            public void run() {
-                playerChatGroups = new HashMap<>();
-
-                for (Player player : plugin.getServer().getOnlinePlayers()) {
-                    List<String> playerGroupNames = getPlayerChatGroups(player);
-                    ChatGroup selectedGroup = null;
-                    int highestWeight = -1;
-
-                    for (String groupName : playerGroupNames) {
-                        ChatGroup group = chatGroups.get(groupName);
-                        if (group != null && group.getWeight() > highestWeight) {
-                            highestWeight = group.getWeight();
-                            selectedGroup = group;
-                        }
-                    }
-
-                    if (selectedGroup == null) {
-                        selectedGroup = defaultGroup;
-                    }
-
-                    playerChatGroups.put(player, selectedGroup);
-                }
-            }
-        }.runTaskTimer(plugin, 0L, timer);
-    }
-
-    public List<String> getPlayerChatGroups(Player player) {
-        List<String> groupPermissions = new ArrayList<>();
+    public ChatGroup getPlayerChatGroup(Player player) {
+        List<ChatGroup> sortedGroups = chatGroups.values().stream().sorted(Comparator.comparing(ChatGroup::getWeight)).collect(Collectors.toList());
         String prefix = "chatutilities.group.";
 
-        Set<PermissionAttachmentInfo> permissions = player.getEffectivePermissions();
-
-        for (PermissionAttachmentInfo permission : permissions) {
-            if (permission.getPermission().startsWith(prefix)) {
-                groupPermissions.add(permission.getPermission().replace(prefix, ""));
-            }
+        for (ChatGroup group : sortedGroups) {
+            String groupName = group.getName();
+            if (player.hasPermission(prefix + groupName)) return group;
         }
-
-        return groupPermissions;
+        return defaultGroup;
     }
 
     public ChatGroup getDefaultGroup() {
@@ -119,10 +70,6 @@ public class ChatManager {
 
     public HashMap<String, ChatGroup> getChatGroups() {
         return chatGroups;
-    }
-
-    public HashMap<Player, ChatGroup> getPlayerChatGroups() {
-        return playerChatGroups;
     }
 
     public ConfigHandler getConfigHandler() {

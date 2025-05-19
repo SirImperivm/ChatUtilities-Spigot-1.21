@@ -135,8 +135,6 @@ public class ChatGroup {
         String[] specialChars = { "&k", "&l", "&m", "&n", "&o", "§k", "§l", "§m", "§n", "§o" };
         boolean hasSpecialPermission = player.hasPermission(Permission.GLOBAL_PERMISSION.getNode()) || player.hasPermission(Permission.CHAT_SPECIAL.getNode());
 
-        boolean hasHexPermission = player.hasPermission(Permission.GLOBAL_PERMISSION.getNode()) || player.hasPermission(Permission.CHAT_HEX.getNode());
-
         if ((baseMessage.contains("&") || baseMessage.contains("§")) && !hasColorPermission) throw new ChatMessageException("chat-exceptions.colored");
 
         boolean containsSpecialChars = false;
@@ -151,8 +149,7 @@ public class ChatGroup {
         }
 
         if (containsSpecialChars && !hasSpecialPermission) throw new ChatMessageException("chat-exceptions.special");
-        if (baseMessage.contains("&#") && !hasHexPermission) throw new ChatMessageException("chat-exceptions.hex");
-        
+
         String baseChatColor = genericSettings.getString("chat-color");
         
         boolean chatItemEnabled = configHandler.getSettings().getBoolean("chat-item.enabled", true);
@@ -177,7 +174,7 @@ public class ChatGroup {
                 
                 for (int i = 0; i < parts.length; i++) {
                     if (!parts[i].isEmpty()) {
-                        finalComponent.addExtra(new TextComponent(Formatter.translate(PlaceholderAPI.setPlaceholders(player, baseChatColor + parts[i]))));
+                        finalComponent.addExtra(new TextComponent(Formatter.translate(baseChatColor + parts[i])));
                     }
                     
                     if (i < parts.length - 1) {
@@ -189,7 +186,7 @@ public class ChatGroup {
             }
         }
 
-        return new TextComponent(Formatter.translate(PlaceholderAPI.setPlaceholders(player, baseChatColor + baseMessage)));
+        return new TextComponent(Formatter.translate(baseChatColor + baseMessage));
     }
 
     public HoverEvent wrapEntity(Player player, String id, String type, String displayedName) {

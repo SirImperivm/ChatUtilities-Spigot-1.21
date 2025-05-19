@@ -4,6 +4,8 @@ main: me.sirimperivm.chatUtilities.ChatUtilities
 api-version: '1.21'
 description: Add utilities for player chat messages.
 authors: [ SirImperivm_ ]
+depend:
+  - PlaceholderAPI
 
 commands:
   chat-utilities:

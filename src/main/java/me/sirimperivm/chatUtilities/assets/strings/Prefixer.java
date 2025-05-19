@@ -14,13 +14,18 @@ public class Prefixer {
 
     private FileConfiguration settings;
 
-    private HashMap<String, Prefix> prefixes = new HashMap<>();
+    private HashMap<String, Prefix> prefixes;
 
     public Prefixer(ChatUtilities plugin) {
         this.plugin = plugin;
         configHandler = plugin.getConfigHandler();
 
         settings = configHandler.getSettings();
+        load();
+    }
+
+    public void load() {
+        prefixes = new HashMap();
 
         for (String prefixSetting : settings.getConfigurationSection("prefixes").getKeys(false) ) {
             String prefixString = settings.getString("prefixes." + prefixSetting + ".prefix-string");

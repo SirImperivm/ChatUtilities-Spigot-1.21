@@ -34,7 +34,7 @@ default-group: # Chat group name
         type: SUGGEST_COMMAND
         command-value: "/msg {player_name} "
   generic-settings:
-    chat-color: "&#f370cc"
-    user-tag-format: "&#7d5cf7@{tagged-name}"
+    chat-color: "&a"
+    user-tag-format: "&e@{tagged-name}"
     item-showing-format: "&r[{default-item-display-name}&r]"
   chat-format: "{prefix} {player-tag} {suffix} &8» "

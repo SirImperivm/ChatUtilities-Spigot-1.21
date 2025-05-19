@@ -6,10 +6,6 @@ prefixes:
     color-code: "&7"
     placeholders-color: "&3"
 
-tasks:
-  refresh-player:
-    timer: 3 # Time in seconds which the plugin will refresh the player's chatgroup.
-
 chat-sounds:
   enabled: true
   sender-only: false
@@ -32,7 +28,6 @@ permissions:
   chat-formats:
     colored: chatutilities.chat.colored # This allows players to write normal colors in chat.
     special: chatutilities.chat.special # This allows players to use special characters to edit the format of a chat message.
-    hex: chatutilities.chat.hex # This allows players to use hex colors in chat.
   chat-item:
     use: chatutilities.chat-item.use
   chat-utilities-command:
