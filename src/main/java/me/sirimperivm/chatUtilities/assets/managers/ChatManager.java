@@ -5,6 +5,7 @@ import me.sirimperivm.chatUtilities.assets.handlers.ConfigHandler;
 import me.sirimperivm.chatUtilities.assets.objects.entities.ChatGroup;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,12 +18,15 @@ public class ChatManager {
 
     private ChatGroup defaultGroup;
     private HashMap<String, ChatGroup> chatGroups;
+
+    private Set<Player> mentionsCooldown;
     
     public ChatManager(ChatUtilities plugin) {
         this.plugin = plugin;
         configHandler = plugin.getConfigHandler();
 
         configure();
+        mentionsCooldown = new HashSet<>();
     }
 
     public void configure() {
@@ -62,6 +66,23 @@ public class ChatManager {
             if (player.hasPermission(prefix + groupName)) return group;
         }
         return defaultGroup;
+    }
+
+    public void startMentionCooldown(Player player) {
+        mentionsCooldown.add(player);
+
+        long cooldown = configHandler.getSettings().getLong("user-mentions.cooldown", 3*20L);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (inMentionCooldown(player)) mentionsCooldown.remove(player);
+            }
+        }.runTaskLater(plugin, cooldown);
+    }
+
+    public boolean inMentionCooldown(Player player) {
+        return mentionsCooldown.contains(player);
     }
 
     public ChatGroup getDefaultGroup() {

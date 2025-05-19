@@ -17,11 +17,12 @@ chat-item:
   enabled: true
   trigger-pattern: "[i]"
 
-user-mention:
+chat-mentions:
   enabled: true
   sound: entity.experience_orb.pickup
   volume: 1.0
   pitch: 1.0
+  cooldown: 3 # Cooldown in seconds between mentions.
 
 permissions:
   global-permission: chatutilities.*
@@ -30,6 +31,10 @@ permissions:
     special: chatutilities.chat.special # This allows players to use special characters to edit the format of a chat message.
   chat-item:
     use: chatutilities.chat-item.use
+  chat-mentions:
+    send: chatutilities.chat-mentions.send
+    receive: chatutilities.chat-mentions.receive
+    bypass-cooldown: chatutilities.chat-mentions.bypass-cooldown
   chat-utilities-command:
     main: chatutilities.command.main
     reload: chatutilities.command.reload

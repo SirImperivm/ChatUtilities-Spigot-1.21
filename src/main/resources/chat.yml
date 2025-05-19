@@ -35,6 +35,6 @@ default-group: # Chat group name
         command-value: "/msg {player_name} "
   generic-settings:
     chat-color: "&a"
-    user-tag-format: "&e@{tagged-name}"
+    user-mention-format: "&e@{mentioned-name}"
     item-showing-format: "&r[{default-item-display-name}&r]"
   chat-format: "{prefix} {player-tag} {suffix} &8» "

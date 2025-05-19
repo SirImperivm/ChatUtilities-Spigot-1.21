@@ -129,6 +129,49 @@ public class ChatGroup {
         return mainComponent;
     }
 
+    private String processPlayerMentions(Player player, String baseMessage) {
+        boolean chatMentionsEnabled = configHandler.getSettings().getBoolean("chat-mentions.enabled", true);
+        if (!chatMentionsEnabled) return baseMessage;
+
+        boolean sendMentionsPermitted = player.hasPermission(Permission.GLOBAL_PERMISSION.getNode()) || player.hasPermission(Permission.CHATMENTIONS_SEND.getNode());
+        if (!sendMentionsPermitted) return baseMessage;
+
+        boolean cooldowned = !(player.hasPermission(Permission.GLOBAL_PERMISSION.getNode()) || player.hasPermission(Permission.CHATMENTIONS_BYPASS_COOLDOWN.getNode())) && chatManager.inMentionCooldown(player);
+        if (cooldowned) return baseMessage;
+
+        String[] words = baseMessage.split(" ");
+        Player mentionedPlayer = null;
+        for (String word : words) {
+            if (Bukkit.getPlayerExact(word) != null) {
+                mentionedPlayer = Bukkit.getPlayerExact(word);
+                break;
+            }
+        }
+
+        if (mentionedPlayer == null) return baseMessage;
+
+        String mentionedPlayerName = mentionedPlayer.getName();
+        boolean receiveMentionsPermitted = mentionedPlayer.hasPermission(Permission.GLOBAL_PERMISSION.getNode()) || mentionedPlayer.hasPermission(Permission.CHATMENTIONS_RECEIVE.getNode());
+        if (!receiveMentionsPermitted) return baseMessage;
+
+        String userMentionFormat = genericSettings.getString("user-mention-format")
+                .replace("{mentioned-name}", mentionedPlayerName);
+        String baseChatColor = genericSettings.getString("chat-color");
+
+        baseMessage = baseMessage.replaceFirst(mentionedPlayerName, Formatter.translate(userMentionFormat) + baseChatColor);
+
+        String soundId = configHandler.getSettings().getString("chat-mentions.sound", "entity.experience_orb.pickup");
+        Sound sound = getSound(soundId);
+
+        float volume = (float) configHandler.getSettings().getDouble("chat-mentions.volume", 1.0);
+        float pitch = (float) configHandler.getSettings().getDouble("chat-mentions.pitch", 1.0);
+        mentionedPlayer.playSound(mentionedPlayer.getLocation(), sound, volume, pitch);
+
+        chatManager.startMentionCooldown(player);
+
+        return baseMessage;
+    }
+
     private TextComponent processBaseMessage(Player player, String baseMessage) throws ChatMessageException {
         boolean hasColorPermission = player.hasPermission(Permission.GLOBAL_PERMISSION.getNode()) || player.hasPermission(Permission.CHAT_COLORED.getNode());
 
@@ -137,8 +180,9 @@ public class ChatGroup {
 
         if ((baseMessage.contains("&") || baseMessage.contains("§")) && !hasColorPermission) throw new ChatMessageException("chat-exceptions.colored");
 
+        String[] words = baseMessage.split(" ");
         boolean containsSpecialChars = false;
-        for (String word : baseMessage.split(" ")) {
+        for (String word : words) {
             for (String specialChar : specialChars) {
                 if (word.contains(specialChar)) {
                     containsSpecialChars = true;
@@ -150,38 +194,40 @@ public class ChatGroup {
 
         if (containsSpecialChars && !hasSpecialPermission) throw new ChatMessageException("chat-exceptions.special");
 
+        baseMessage = processPlayerMentions(player, baseMessage);
+
         String baseChatColor = genericSettings.getString("chat-color");
-        
+
         boolean chatItemEnabled = configHandler.getSettings().getBoolean("chat-item.enabled", true);
         if (chatItemEnabled) {
             String triggerPatternString = configHandler.getSettings().getString("chat-item.trigger-pattern", "[i]");
             boolean hasChatItemPermission = player.hasPermission(Permission.GLOBAL_PERMISSION.getNode()) || player.hasPermission(Permission.CHATITEM_USE.getNode());
-            
+
             if (baseMessage.contains(triggerPatternString) && hasChatItemPermission) {
                 ItemStack item = getItem(player);
                 if (item == null) throw new ChatMessageException("chat-exceptions.empty-hand");
-                
+
                 String itemShowingFormat = genericSettings.getString("item-showing-format");
                 String formattedItemText = Formatter.translate(itemShowingFormat.replace("{default-item-display-name}",
                     item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : item.getType().toString()));
-                
+
                 TextComponent itemComponent = new TextComponent(formattedItemText);
                 itemComponent.setHoverEvent(wrapItem(item));
-                
+
                 TextComponent finalComponent = new TextComponent();
-                
+
                 String[] parts = baseMessage.split(Pattern.quote(triggerPatternString), -1);
-                
+
                 for (int i = 0; i < parts.length; i++) {
                     if (!parts[i].isEmpty()) {
                         finalComponent.addExtra(new TextComponent(Formatter.translate(baseChatColor + parts[i])));
                     }
-                    
+
                     if (i < parts.length - 1) {
                         finalComponent.addExtra(itemComponent);
                     }
                 }
-                
+
                 return finalComponent;
             }
         }
