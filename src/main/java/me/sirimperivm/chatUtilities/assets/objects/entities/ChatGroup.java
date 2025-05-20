@@ -6,10 +6,7 @@ import me.sirimperivm.chatUtilities.assets.managers.ChatManager;
 import me.sirimperivm.chatUtilities.assets.objects.enums.Permission;
 import me.sirimperivm.chatUtilities.assets.objects.exceptions.ChatMessageException;
 import me.sirimperivm.chatUtilities.assets.strings.Formatter;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.ItemTag;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Entity;
 import net.md_5.bungee.api.chat.hover.content.Item;
 import org.bukkit.Bukkit;
@@ -256,7 +253,7 @@ public class ChatGroup {
         String material = item.getType().toString();
         int amount = item.getAmount();
         ItemMeta meta = item.getItemMeta();
-        String displayName = meta.hasDisplayName() ? Formatter.translate(meta.getDisplayName()) : "";
+        String displayName = meta.hasDisplayName() ? Formatter.translate(meta.getDisplayName()) : getLocalizedItemName(item);
         List<String> description = meta.hasLore() ? Formatter.translate(meta.getLore()) : new ArrayList<>();
         int customModelData = meta.hasCustomModelData() ? meta.getCustomModelData() : 0;
         
@@ -343,6 +340,16 @@ public class ChatGroup {
 
         return result;
     }
+
+    private String getLocalizedItemName(ItemStack item) {
+        String itemName = item.getType().toString();
+        String[] words = itemName.split("_");
+        StringBuilder builder = new StringBuilder();
+        for (String word : words) {
+            builder.append(Formatter.capitalize(word)).append(" ");
+        }
+        return builder.toString().trim();
+    }
     
     private int getItemFlagValue(ItemFlag flag) {
         switch (flag) {
@@ -356,19 +363,24 @@ public class ChatGroup {
         }
     }
     
-    public void sendChatSound() {
+    public void sendChatSound(Player sender) {
         boolean enabled = configHandler.getSettings().getBoolean("chat-sounds.enabled", true);
         if (!enabled) return;
-        
+
+        boolean senderOnly = configHandler.getSettings().getBoolean("chat-sounds.sender-only", false);
         String soundId = configHandler.getSettings().getString("chat-sounds.sound", "ui.button.click");
         Sound sound = getSound(soundId);
         if (sound == null) return;
         
         float volume = (float) configHandler.getSettings().getDouble("chat-sounds.volume", 1.0);
         float pitch = (float) configHandler.getSettings().getDouble("chat-sounds.pitch", 1.0);
-        
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            player.playSound(player.getLocation(), sound, volume, pitch);
+
+        if (!senderOnly) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.playSound(player.getLocation(), sound, volume, pitch);
+            }
+        } else {
+            sender.playSound(sender.getLocation(), sound, volume, pitch);
         }
     }
 

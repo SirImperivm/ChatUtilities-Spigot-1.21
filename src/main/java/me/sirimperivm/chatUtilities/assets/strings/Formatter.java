@@ -9,6 +9,10 @@ import java.util.Map;
 @SuppressWarnings("all")
 public class Formatter {
 
+    public static String capitalize(String string) {
+        return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
+    }
+
     public static String translate(String s) {
         return ChatColor.translateAlternateColorCodes('&', s);
     }

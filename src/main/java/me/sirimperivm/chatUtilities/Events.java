@@ -44,7 +44,7 @@ public class Events implements Listener {
             TextComponent message = playerChatGroup.getMessage(player, baseMessage);
             Bukkit.getServer().spigot().broadcast(message);
             Bukkit.getServer().getConsoleSender().sendMessage(Formatter.translate(message.toLegacyText()));
-            playerChatGroup.sendChatSound();
+            playerChatGroup.sendChatSound(player);
         } catch (ChatMessageException ex) {
             player.sendMessage(ConfigHandler.getFormatString(Config.messages.getC(), ex.getMessage(), Map.of()));
         } catch (Exception ex) {
